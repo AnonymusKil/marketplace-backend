@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import jsonwebtoken from "jsonwebtoken";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -38,6 +39,9 @@ async function startServer() {
     await server.start();
 
     app.use(express.json());
+    app.use(cors({
+      origin: "https://marketplace-frontend-one-sage.vercel.app/"
+    }))
 
     // ✅ REST routes
     app.use("/image", imageRoutes);
