@@ -1,0 +1,45 @@
+{
+  "input": {
+    "name": "Imam Fulani",
+    "email": "ImamFulani@gmail.com",
+    "password": "OmoDeen1234"
+  }
+}
+
+
+{
+  "input": {
+    "email": "anon@example.com",
+    "password": "StrongPass123!"
+  }
+}
+
+
+//register
+{
+  "input": {
+    "name": "Sarah Blake",
+    "email": "sarah@example.com",
+    "password": "Sarah1234!"
+  }
+}
+
+{
+    "url": "https://res.cloudinary.com/doc865ug6/image/upload/v1777149694/n7yxktq4om2fwkaf0k6e.png",
+    "publicId": "n7yxktq4om2fwkaf0k6e"
+}
+
+
+//Product blueprint
+
+{
+  "name": "Nike Shirt",
+  "price": 5000,
+  "category": "Fashion",
+  "isActive": true,
+  "variants": [
+    { "size": "S", "quantity": 10 },
+    { "size": "M", "quantity": 5 },
+    { "size": "L", "quantity": 0 }
+  ]
+}
