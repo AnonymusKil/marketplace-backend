@@ -37,10 +37,13 @@ async function startServer() {
     
 
     await server.start();
-
+    const allowedOrigins = [
+      "https://marketplace-frontend-one-sage.vercel.app",
+      "http://localhost:3000",
+    ];
     app.use(express.json());
     app.use(cors({
-      origin: "https://marketplace-frontend-one-sage.vercel.app/"
+      origin: allowedOrigins,
     }))
 
     // ✅ REST routes
