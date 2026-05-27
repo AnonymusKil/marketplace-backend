@@ -55,7 +55,7 @@ async function startServer() {
       "/graphql",
       // @ts-ignore
       expressMiddleware(server, {
-        context: async ({ req } : {req: any}) => {
+        context: async ({ req, res } : {req: any, res: any}) => {
           const authHeader = req.headers.authorization;
           const token = authHeader?.split(" ")[1];
 
@@ -68,7 +68,7 @@ async function startServer() {
             );
             return { user: decoded };
           } catch {
-            return { user: null };
+            return {req, res, user: null };
           }
         },
       })

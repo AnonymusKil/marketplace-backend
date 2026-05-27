@@ -22,6 +22,7 @@ export interface AuthResponse {
     sellerStatus?: string;
   };
   token: string;
+  refreshToken?: string;
 }
 
 //register function
@@ -55,6 +56,15 @@ export async function register(data: User): Promise<AuthResponse> {
       { expiresIn: "1h" },
     );
 
+    const refreshToken = jwt.sign(
+      {
+        userId: newUser._id,
+        role: newUser.role,
+      },
+      process.env.JWT_SECRET_KEY as string,
+      { expiresIn: "7d" },
+    );
+
     const response: AuthResponse = {
       message: "User registered successfully",
       user: {
@@ -64,6 +74,7 @@ export async function register(data: User): Promise<AuthResponse> {
         role: newUser.role,
       },
       token,
+      refreshToken,
     };
     const{subject, html} = welcomeEmailTemplate(
       newUser.name,
@@ -105,6 +116,15 @@ export async function login(data: LoginData): Promise<AuthResponse> {
       process.env.JWT_SECRET_KEY as string,
       { expiresIn: "15m" },
     );
+
+    const refreshToken = jwt.sign(
+      {userId: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET_KEY as string,
+      { expiresIn: "7d" },
+    )
+
     const response: AuthResponse = {
       message: "User logged in successfully",
       user: {
@@ -115,6 +135,7 @@ export async function login(data: LoginData): Promise<AuthResponse> {
         sellerStatus: user.sellerStatus,
       },
       token,
+      refreshToken,
     };
     console.log("USER FOUND:", user);
     return response;
