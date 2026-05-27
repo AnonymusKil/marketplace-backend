@@ -66,8 +66,9 @@ product: Product!
 
 
 type Query{
-me:String!
+me:User!
 }
+
 
 type Mutation{
 register(
