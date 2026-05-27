@@ -59,14 +59,14 @@ async function startServer() {
           const authHeader = req.headers.authorization;
           const token = authHeader?.split(" ")[1];
 
-          if (!token) return { user: null };
+          if (!token) return { req, res,  user: null };
 
           try {
             const decoded = jsonwebtoken.verify(
               token,
               process.env.JWT_SECRET_KEY as string
             );
-            return { user: decoded };
+            return { req, res, user: decoded };
           } catch {
             return {req, res, user: null };
           }
