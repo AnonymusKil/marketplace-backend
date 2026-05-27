@@ -1,6 +1,22 @@
 import { register, login } from "../../services/authservices.js";
+import  User  from "../../model/Usermodel.js";
+
 
 const Resolvers = {
+
+  Query: {
+    me: async (_: any, __: any, context: any) => {
+      if (!context.user) {
+        throw new Error("Unauthorized");
+      }
+      const user = await User.findById(context.user.userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user;
+    }
+
+  },
   Mutation: {
     register: async (_: any, { input }: any) => {
       try {

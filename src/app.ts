@@ -19,6 +19,7 @@ async function startServer() {
     await connectDB();
     const resolvers = {
         Query: {
+          ...authResolvers.Query,
           // Example query resolver
         },
         Mutation: {
