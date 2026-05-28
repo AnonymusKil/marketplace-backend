@@ -8,6 +8,7 @@ import { authTypeDefs } from "./graphql/schema/AuthSchma.js";
 import authResolvers from "./graphql/resolvers/AuthResolvers.js";
 import sellerResolvers from "./graphql/resolvers/sellerResolvers.js";
 import approveSellerResolver from "./graphql/resolvers/approveSellerResolver.js";
+import refreshTokenResolver from "./graphql/resolvers/refreshTokenResolver.js";
 import imageRoutes from "./routes/uploadImage.js";
 import connectDB from "./database/db.js";
 
@@ -26,6 +27,7 @@ async function startServer() {
         ...authResolvers.Mutation,
         ...sellerResolvers.Mutation,
         ...approveSellerResolver.Mutation,
+        ...refreshTokenResolver.Mutation,
         // Example mutation resolver
       },
     };

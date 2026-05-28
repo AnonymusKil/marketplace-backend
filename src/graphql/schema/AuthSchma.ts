@@ -22,6 +22,12 @@ image: [String!]!
 category: String!
 stock: Int!
 }
+
+type RefreshTokenResponse{
+message: String!
+token: String!
+
+}
 input RegisterInput{
 name: String!
 email: String!
@@ -89,6 +95,8 @@ input: ApproveSellerInput!
 createProduct(
 input: CreateProductInput!
 ): ProductResponse!
+
+refreshToken: RefreshTokenResponse!
 }
 
 `
