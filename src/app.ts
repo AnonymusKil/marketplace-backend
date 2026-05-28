@@ -45,6 +45,7 @@ async function startServer() {
     app.use(express.json());
     app.use(cors({
       origin: allowedOrigins,
+      credentials: true,
     }))
 
     // ✅ REST routes
