@@ -18,24 +18,22 @@ async function startServer() {
   try {
     await connectDB();
     const resolvers = {
-        Query: {
-          ...authResolvers.Query,
-          // Example query resolver
-        },
-        Mutation: {
-          ...authResolvers.Mutation,
-          ...sellerResolvers.Mutation,
-          ...approveSellerResolver.Mutation,
-          // Example mutation resolver
-        }
-      };
+      Query: {
+        ...authResolvers.Query,
+        // Example query resolver
+      },
+      Mutation: {
+        ...authResolvers.Mutation,
+        ...sellerResolvers.Mutation,
+        ...approveSellerResolver.Mutation,
+        // Example mutation resolver
+      },
+    };
 
     const server = new ApolloServer({
-      
       typeDefs: authTypeDefs,
       resolvers,
     });
-    
 
     await server.start();
     const allowedOrigins = [
@@ -43,10 +41,20 @@ async function startServer() {
       "http://localhost:3000",
     ];
     app.use(express.json());
-    app.use(cors({
-      origin: allowedOrigins,
-      credentials: true,
-    }))
+    app.use(
+      cors({
+        origin: function (origin, callback) {
+          if (!origin) return callback(null, true); // mobile/postman support
+
+          if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+          }
+
+          return callback(new Error("Not allowed by CORS"));
+        },
+        credentials: true,
+      }),
+    );
 
     // ✅ REST routes
     app.use("/image", imageRoutes);
@@ -56,29 +64,28 @@ async function startServer() {
       "/graphql",
       // @ts-ignore
       expressMiddleware(server, {
-        context: async ({ req, res } : {req: any, res: any}) => {
+        context: async ({ req, res }: { req: any; res: any }) => {
           const authHeader = req.headers.authorization;
           const token = authHeader?.split(" ")[1];
 
-          if (!token) return { req, res,  user: null };
+          if (!token) return { req, res, user: null };
 
           try {
             const decoded = jsonwebtoken.verify(
               token,
-              process.env.JWT_SECRET_KEY as string
+              process.env.JWT_SECRET_KEY as string,
             );
             return { req, res, user: decoded };
           } catch {
-            return {req, res, user: null };
+            return { req, res, user: null };
           }
         },
-      })
+      }),
     );
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}/graphql`);
     });
-
   } catch (error) {
     console.error("Failed to start server:", error);
   }
