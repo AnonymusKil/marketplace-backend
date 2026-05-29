@@ -1,3 +1,4 @@
+import {GraphQLError} from "graphql";
 import { register, login } from "../../services/authservices.js";
 import User from "../../model/Usermodel.js";
 
@@ -5,11 +6,19 @@ const Resolvers = {
   Query: {
     me: async (_: any, __: any, context: any) => {
       if (!context.user) {
-        throw new Error("Unauthorized");
+        throw new GraphQLError("Unauthorized", {
+          extensions: {
+            code: "UNAUTHENTICATED",
+          },
+        });
       }
       const user = await User.findById(context.user.userId);
       if (!user) {
-        throw new Error("User not found");
+        throw new GraphQLError("User not found", {
+          extensions: {
+            code: "NOT_FOUND",
+          },
+        });
       }
       return user;
     },
@@ -36,7 +45,11 @@ const Resolvers = {
           token: response.token,
         }
       } catch (error: any) {
-        throw new Error(error.message || "Server error");
+        throw new GraphQLError(error.message || "Server error", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
       }
     },
     login: async (_: any, { input }: any, { res}: any) => {
@@ -59,7 +72,11 @@ const Resolvers = {
           token: response.token,
         }
       } catch (error: any) {
-        throw new Error(error.message || "Server error");
+        throw new GraphQLError(error.message || "Server error", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
       }
     },
   },
