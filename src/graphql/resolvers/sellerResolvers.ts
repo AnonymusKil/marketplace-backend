@@ -10,7 +10,8 @@ const sellerResolvers = {
           businessEmail,
           businessPhone,
           businessLogo,
-            publicId
+          businessAddress,
+          publicId
         } = input;
         // const firstResponse = await becomeASeller(input, context);
         console.log("🔥 Resolver HIT");
@@ -21,6 +22,7 @@ const sellerResolvers = {
             description,
             businessEmail,
             businessPhone,
+            businessAddress,
             businessLogo,
             publicId
           },

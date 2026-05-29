@@ -9,6 +9,7 @@ interface SellerInput {
   businessEmail: string;
   businessPhone: string;
   businessLogo: string;
+  businessAddress: string;
   publicId: string;
 }
 
@@ -22,14 +23,14 @@ export async function becomeASeller(
   data: SellerInput,
   context: any,
 ): Promise<SellerResponse> {
-  const { storeName, description, businessEmail, businessPhone, businessLogo, publicId } = data;
+  const { storeName, description, businessEmail, businessPhone, businessLogo, businessAddress, publicId } = data;
 
   // 🔐 Auth
   const owner = context?.user?.userId;
   if (!owner) throw new Error("Not authenticated");
 
   // 🧾 Validate input
-  if (!storeName || !description || !businessEmail || !businessPhone) {
+  if (!storeName || !description || !businessEmail || !businessPhone || !businessAddress) {
     throw new Error("All fields are required");
   }
 
@@ -58,6 +59,7 @@ export async function becomeASeller(
     owner,
     businessEmail,
     businessPhone: businessPhone.trim(),
+    businessAddress,
     businessLogo,
     publicId,
   });

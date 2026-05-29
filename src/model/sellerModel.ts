@@ -7,6 +7,7 @@ interface Seller extends Document {
   businessEmail: string;
   businessPhone: string;
   businessLogo: string;
+  businessAddress: string;
   publicId: string;
 }
 
@@ -36,7 +37,11 @@ const sellerSchema = new Schema<Seller>({
     type: String,
     required: true,
   },
-
+  businessAddress: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   businessLogo: {
     type: String,
     required: true,

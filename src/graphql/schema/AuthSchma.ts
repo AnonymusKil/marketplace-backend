@@ -53,6 +53,7 @@ description: String!
 businessEmail: String!
 businessPhone: String!
 businessLogo: String!
+businessAddress: String!
 publicId: String!
 }
 
