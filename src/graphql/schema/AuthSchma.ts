@@ -13,6 +13,10 @@ message: String!
 user: User!
 token: String!
 }
+type logOutResponse{
+success: Boolean!
+message: String!
+}
 type Product{
 id: ID!
 name: String!
@@ -97,6 +101,7 @@ input: CreateProductInput!
 ): ProductResponse!
 
 refreshToken: RefreshTokenResponse!
+logout: logOutResponse!
 }
 
 `

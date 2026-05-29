@@ -32,6 +32,24 @@ const refreshTokenResolver = {
         throw new Error(error.message || "Server error");
       }
     },
+
+
+    logout: async(_:any, __:any, {req, res}: any) => {
+      try{
+        res.clearCookie("refreshToken", {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        })
+        return {
+          message: "Logged out successfully",
+          success: true
+        };
+
+      }catch(error: any){
+        throw new Error(error.message || "Server error");
+      }
+    }
   },
 };
 
