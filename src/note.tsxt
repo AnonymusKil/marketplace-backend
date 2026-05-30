@@ -29,7 +29,23 @@
     "publicId": "n7yxktq4om2fwkaf0k6e"
 }
 
+{
+ "input": {
+    "name": "Smith Sandra",
+    "email": "cobobat816@trepolan.com",
+    "password": "Test1234!"
+  } 
+}
 
+
+
+{
+ "input": {
+    "name": "Jacob Raymond",
+    "email": "kajasi9709@trepolan.com",
+    "password": "hmmm1234!"
+  } 
+}
 //Product blueprint
 
 {
