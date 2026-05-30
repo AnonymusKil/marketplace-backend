@@ -39,12 +39,14 @@ async function startServer() {
     });
 
     await server.start();
+    
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    app.use(cookieParser());
     const allowedOrigins = [
       "https://marketplace-frontend-one-sage.vercel.app",
       "http://localhost:3000",
     ];
-    app.use(express.json());
-    app.use(cookieParser());
     app.use(
       cors({
         origin: function (origin, callback) {
