@@ -2,7 +2,7 @@ import Usermodel from "../model/Usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import {welcomeEmailTemplate} from "../email/welcomeEmail.js"
-import {sendSellerApplicationEmail} from "./sellerEmailService.js"
+import {sendEmail} from "./sellerEmailServices.js"
 const jwtseceret = process.env.JWT_SECRET_KEY;
 if (!jwtseceret) {
   throw new Error("JWT secret key not configured");
@@ -79,7 +79,7 @@ export async function register(data: User): Promise<AuthResponse> {
     const{subject, html} = welcomeEmailTemplate(
       newUser.name,
     );
-    await sendSellerApplicationEmail(normalizedEmail, subject, html);
+    await sendEmail({to: "navadesignz11@gmail.com", subject, html});
 
     return response;
   } catch (error: any) {

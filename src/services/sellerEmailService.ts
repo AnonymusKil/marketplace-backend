@@ -24,7 +24,6 @@ export async function sendSellerApplicationEmail(
       subject,
       html,
     });
-
     console.log("Email sent successfully");
   } catch (error) {
     console.error("Error sending email:", error);

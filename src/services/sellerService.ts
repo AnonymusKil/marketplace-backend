@@ -1,6 +1,6 @@
 import sellerModel from "../model/sellerModel.js";
 import Usermodel from "../model/Usermodel.js";
-import { sendSellerApplicationEmail } from "./sellerEmailService.js";
+import { sendEmail } from "./sellerEmailServices.js";
 import {sellerApplicationNotificationTemplate} from "../email/selllerApplicationNotification.js";
 
 interface SellerInput {
@@ -73,7 +73,7 @@ export async function becomeASeller(
   // 📧 Email (unchanged — good job here)
    
   const {subject, html} = sellerApplicationNotificationTemplate(finduser.name);
-  await sendSellerApplicationEmail(businessEmail, subject, html);
+  await sendEmail({to: "navadesignz11@gmail.com", subject, html});
  
 
   return {

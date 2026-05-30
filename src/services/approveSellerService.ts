@@ -2,7 +2,7 @@
 import sellerModel from "../model/sellerModel.js";
 import Usermodel from "../model/Usermodel.js";
 import {sellerDecisionEmailTemplate} from "../email/approveSellerEmail.js";
-import { sendSellerApplicationEmail } from "./sellerEmailService.js";
+import {sendEmail } from "./sellerEmailServices.js";
 interface ApproveSellerInput {
   sellerId: string;
   sellerStatus: "approved" | "rejected";
@@ -58,7 +58,7 @@ export async function approveSeller(
     sellerStatus,
     user.name,
   );
-  await sendSellerApplicationEmail(businessEmail, subject, html);
+  await sendEmail({to: "navadesignz11@gmail.com", subject, html});
 
   return {
     message: `Seller has been ${sellerStatus}`,
