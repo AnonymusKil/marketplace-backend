@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 export async function sendSellerApplicationEmail(
   to: string,
   subject: string,
-  html: string
+  html: string,
 ): Promise<void> {
   try {
     const transporter = nodemailer.createTransport({
@@ -23,6 +23,8 @@ export async function sendSellerApplicationEmail(
     });
   } catch (error) {
     console.error("Error sending email:", error);
-    throw new Error("Failed to send email");
+    throw new Error(
+      error instanceof Error ? error.message : "Failed to send email",
+    );
   }
 }
