@@ -22,6 +22,8 @@ async function startServer() {
     const resolvers = {
       Query: {
         ...authResolvers.Query,
+        ...approveSellerResolver.Query,
+        // ...refreshTokenResolver.Query,
         // Example query resolver
       },
       Mutation: {

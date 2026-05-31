@@ -8,6 +8,17 @@ email: String!
 role: String!
 sellerStatus: String
 }
+type Seller{
+id: ID!
+storeName: String!
+description: String!
+businessEmail: String!
+businessPhone: String!
+businessLogo: String!
+businessAddress: String!
+publicId: String!
+user: User!
+}
 type AuthResponse{
 message: String!
 user: User!
@@ -68,6 +79,7 @@ images: [String!]!
 type BecomeASellerResponse{
 message: String!
 sellerStatus: String!
+seller: Seller!
 }
 
 type ProductResponse{
@@ -78,6 +90,7 @@ product: Product!
 
 type Query{
 me:User!
+sellerProfile: Seller!
 }
 
 

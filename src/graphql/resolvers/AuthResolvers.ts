@@ -20,6 +20,14 @@ const Resolvers = {
           },
         });
       }
+      const userObj = user.toObject();
+      return{
+        id: userObj._id.toString(),
+        name: userObj.name,
+        email: userObj.email,
+        role: userObj.role,
+        sellerStatus: userObj.sellerStatus,
+      }
       return user;
     },
   },

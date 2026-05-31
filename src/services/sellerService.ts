@@ -39,7 +39,7 @@ export async function becomeASeller(
   if (!finduser) throw new Error("User not found");
 
   if (finduser.sellerStatus === "pending") {
-    throw new Error("You have already applied");
+    throw new Error("Application already under review");
   }
 
   if (finduser.sellerStatus === "approved") {
