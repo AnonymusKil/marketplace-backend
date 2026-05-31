@@ -7,6 +7,7 @@ name: String!
 email: String!
 role: String!
 sellerStatus: String
+createdAt: String!
 }
 type Seller{
 id: ID!
@@ -91,6 +92,7 @@ product: Product!
 type Query{
 me:User!
 sellerProfile: Seller!
+sellers(status: String): [Seller!]!
 }
 
 
