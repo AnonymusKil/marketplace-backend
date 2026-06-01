@@ -6,6 +6,8 @@ interface User extends Document {
   password: string;
   role: "user" | "seller" | "admin";
   sellerStatus:  "none" | "pending" | "approved" | "rejected";
+  createdAt?: Date;
+  uploadAt?: Date;
 }
 const userSchema = new Schema<User>(
   {

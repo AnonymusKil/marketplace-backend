@@ -55,58 +55,61 @@ const approveSellerResolver = {
         businessAddress: sellerObj.businessAddress,
         publicId: sellerObj.publicId,
         user: {
-            ...user.toObject(),
-            id: user._id.toString(),
-        }
-        
+          ...user.toObject(),
+          id: user._id.toString(),
+        },
       };
     },
-
-
-    sellers: async (_: any, __: any, context: any, { status }: { status: string }) => {
+    sellers: async (
+      _: any,
+      { status }: { status: string },
+      context: any,
+    ) => {
       if (!context.user) {
         throw new GraphQLError("Unauthorized", {
-          extensions: {
-            code: "UNAUTHENTICATED",
-          },
+          extensions: { code: "UNAUTHENTICATED" },
         });
       }
-        const userRole = context?.user?.role;
-        if (userRole !== "admin") {
-          throw new GraphQLError("Forbidden", {
-            extensions: {
-              code: "FORBIDDEN",
-            },
-          });
-        }
 
-        const filter: any = {};
-        if (status) {
-          filter.sellerStatus = status;
-        }
-        const sellers = await sellerModel.find(filter).populate("owner", "name email createdAt");
-        return sellers.map((seller) => {
-          const sellerObj = seller.toObject();
-          const owner = sellerObj.owner as any;
-          console.log("SELLER OWNER:", owner);
-            return {
-                id: sellerObj._id.toString(),
-                storeName: sellerObj.storeName,
-                description: sellerObj.description,
-                businessEmail: sellerObj.businessEmail,
-                businessPhone: sellerObj.businessPhone,
-                businessLogo: sellerObj.businessLogo,
-                businessAddress: sellerObj.businessAddress,
-                publicId: sellerObj.publicId,
-                user: {
-                    id: owner?._id?.toString?.() || "",
-                    name: owner?.name || "",
-                    email: owner?.email || "",
-                    createdAt: owner?.createdAt || ""
-                }
-            }
+      const userRole = context?.user?.role;
+      if (userRole !== "admin") {
+        throw new GraphQLError("Forbidden", {
+          extensions: { code: "FORBIDDEN" },
         });
-    }
+      }
+     console.log("STATUS RECEIVED:", status);
+      const sellers = await sellerModel
+        .find()
+        .populate("owner", "name email createdAt sellerStatus");
+   
+      const filteredSellers = status
+        ? sellers.filter((seller: any) => seller.owner?.sellerStatus === status)
+        : sellers;
+
+      return filteredSellers.map((seller: any) => {
+        const sellerObj = seller.toObject();
+        const owner = sellerObj.owner;
+
+        return {
+          id: sellerObj._id.toString(),
+          storeName: sellerObj.storeName,
+          description: sellerObj.description,
+          businessEmail: sellerObj.businessEmail,
+          businessPhone: sellerObj.businessPhone,
+          businessLogo: sellerObj.businessLogo,
+          businessAddress: sellerObj.businessAddress,
+          publicId: sellerObj.publicId,
+
+          user: {
+            id: owner?._id?.toString?.() || "",
+            name: owner?.name || "",
+            email: owner?.email || "",
+            createdAt: owner?.createdAt || "",
+            sellerStatus: owner?.sellerStatus || "",
+          },
+        };
+      });
+    },
   },
   Mutation: {
     approveSeller: async (_: any, { input }: any, context: any) => {
