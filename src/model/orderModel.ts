@@ -8,6 +8,18 @@ interface OrderItem {
   quantity: number;
 }
 
+interface ShippingAddress {
+  fullName: string;
+  phoneNumber: string;
+  emailAddress: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  street: string;
+  zipCode: string;
+}
+
 interface Order extends Document {
   user: mongoose.Types.ObjectId;
 
@@ -17,6 +29,8 @@ interface Order extends Document {
   discount: number;
   total: number;
 
+  shippingAddress: ShippingAddress;
+
   status: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
 
   payment: {
@@ -25,6 +39,9 @@ interface Order extends Document {
     transactionRef?: string;
     paidAt?: Date;
   };
+  createdAt?: Date;
+  updatedAt?: Date;
+
 }
 
 const orderSchema = new Schema<Order>(
@@ -81,6 +98,50 @@ const orderSchema = new Schema<Order>(
       required: true,
     },
 
+    shippingAddress: {
+      fullName: {
+        type: String,
+        required: true,
+      },
+
+      phoneNumber: {
+        type: String,
+        required: true,
+      },
+
+      emailAddress: {
+        type: String,
+        required: true,
+      },
+
+      address: {
+        type: String,
+        required: true,
+      },
+      street: {
+        type: String,
+        required: true,
+      },
+
+      city: {
+        type: String,
+        required: true,
+      },
+
+      state: {
+        type: String,
+        required: true,
+      },
+
+      country: {
+        type: String,
+        required: true,
+      },
+      zipCode: {
+        type: String,
+      },
+    },
+
     status: {
       type: String,
       enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
@@ -102,7 +163,7 @@ const orderSchema = new Schema<Order>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default mongoose.model<Order>("Order", orderSchema);

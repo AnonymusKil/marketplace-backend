@@ -59,13 +59,25 @@ export const authTypeDefs = gql`
     name: String!
     image: String!
   }
-
+  type ShippingAddress {
+    fullName: String!
+    phoneNumber: String!
+    emailAddress: String!
+    address: String!
+    city: String!
+    state: String!
+    country: String!
+    street: String!
+    zipCode: String
+  }
   type Order {
     items: [OrderItem!]!
     total: Float!
     subtotal: Float!
     discount: Coupon
     status: String
+    shippingAddress: ShippingAddress
+    createdAt: String!
   }
 
   type CheckOut {
@@ -172,9 +184,21 @@ export const authTypeDefs = gql`
     productId: ID!
     deleteAll: Boolean
   }
+  input ShippingAddressInput {
+    fullName: String!
+    phoneNumber: String!
+    emailAddress: String!
+    address: String!
+    city: String!
+    state: String!
+    country: String!
+    street: String!
+    zipCode: String
+  }
   input createOrderInput {
     couponCode: String
     paymentMethod: String!
+    shippingAddress: ShippingAddressInput!
   }
   type BecomeASellerResponse {
     message: String!
@@ -195,6 +219,7 @@ export const authTypeDefs = gql`
     totalItemsSold: Int!
     totalProducts: Int!
   }
+
   type OrderResponse {
     message: String!
     order: Order!

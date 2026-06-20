@@ -45,6 +45,7 @@ const cartSchema = new Schema<Cart>(
       type: Number,
       default: 0,
     },
+    
   },
   { timestamps: true },
 );

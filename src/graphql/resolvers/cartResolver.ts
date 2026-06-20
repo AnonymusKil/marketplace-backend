@@ -105,7 +105,7 @@ const cartResolver = {
         return orders.map((order) => ({
           user: order.user.toString(),
           items: order.items.map((item: any) => ({
-           product: {
+            product: {
               id: item.product._id?.toString(),
               name: item.product.name,
               description: item.product.description,
@@ -115,9 +115,26 @@ const cartResolver = {
             quantity: item.quantity,
             priceAtAdd: item.priceAtAdd,
           })),
+          shippingAddress: order.shippingAddress
+            ? {
+                fullName: order.shippingAddress.fullName,
+                phoneNumber: order.shippingAddress.phoneNumber,
+                street: order.shippingAddress.phoneNumber,
+                emailAddress: order.shippingAddress.emailAddress,
+                address: order.shippingAddress.address,
+                city: order.shippingAddress.city,
+                state: order.shippingAddress.state,
+                country: order.shippingAddress.country,
+                postalCode: order.shippingAddress.zipCode,
+              }
+            : null,
+
           total: order.total,
           subtotal: order.subtotal,
           status: order.status,
+
+          createdAt: order.createdAt,
+          updatedAt: order.updatedAt,
         }));
       } catch (error: any) {
         throw new GraphQLError(error.message || "Server error", {
@@ -210,17 +227,19 @@ const cartResolver = {
         });
       }
     },
-
     createOrder: async (_: any, { input }: any, context: any) => {
       try {
-        const { couponCode, paymentMethod } = input;
+        const { couponCode, paymentMethod, shippingAddress } = input;
+
         const response = await createUserOrder(
           {
             couponCode,
             paymentMethod,
+            shippingAddress,
           },
           context,
         );
+
         return {
           message: response.message,
           order: response.order,
