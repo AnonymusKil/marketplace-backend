@@ -10,6 +10,10 @@ import authResolvers from "./graphql/resolvers/AuthResolvers.js";
 import sellerResolvers from "./graphql/resolvers/sellerResolvers.js";
 import approveSellerResolver from "./graphql/resolvers/approveSellerResolver.js";
 import refreshTokenResolver from "./graphql/resolvers/refreshTokenResolver.js";
+import productResolvers from "./graphql/resolvers/productResolver.js";
+import productReviews from "./graphql/resolvers/reviewResolver.js"
+import cartResolver from "./graphql/resolvers/cartResolver.js";
+import sellerStats from "./graphql/resolvers/sellerStatsResolver.js"
 import imageRoutes from "./routes/uploadImage.js";
 import connectDB from "./database/db.js";
 
@@ -23,6 +27,10 @@ async function startServer() {
       Query: {
         ...authResolvers.Query,
         ...approveSellerResolver.Query,
+        ...productResolvers.Query,
+        ...cartResolver.Query,
+        ...productReviews.Query,
+        ...sellerStats.Query
         // ...refreshTokenResolver.Query,
         // Example query resolver
       },
@@ -31,6 +39,9 @@ async function startServer() {
         ...sellerResolvers.Mutation,
         ...approveSellerResolver.Mutation,
         ...refreshTokenResolver.Mutation,
+        ...productResolvers.Mutation,
+        ...cartResolver.Mutation,
+        ...productReviews.Mutation,
         // Example mutation resolver
       },
     };

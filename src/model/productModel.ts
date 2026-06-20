@@ -1,36 +1,14 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-interface Variant {
-  size: string;
-  quantity: number;
-}
-
 interface Products extends Document {
   name: string;
   description: string;
   price: number;
   category: string;
   images: string[];
+  publicId: string;
   seller: mongoose.Types.ObjectId;
-  isActive: boolean;
-  variants: Variant[];
 }
-
-const variantSchema = new Schema<Variant>(
-  {
-    size: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: [0, "Quantity cannot be negative"],
-    },
-  },
-  { _id: false } // 👈 prevents Mongo from creating separate IDs for each variant
-);
 
 const productSchema = new Schema<Products>(
   {
@@ -51,7 +29,16 @@ const productSchema = new Schema<Products>(
     },
     category: {
       type: String,
-      enum: ["Fashion", "Electronics", "Home", "Books", "Toys", "Sports", "Beauty"],
+      enum: [
+        "Electronics",
+        "Clothing",
+        "Home & Kitchen",
+        "Beauty & Health",
+        "Toys & Games",
+        "Sports & Outdoors",
+        "Books & Media",
+        "Food & Drink",
+      ],
       required: true,
       trim: true,
     },
@@ -64,30 +51,17 @@ const productSchema = new Schema<Products>(
         message: "A product must have between 1 and 4 images",
       },
     },
-    seller: {
-      type: mongoose.Types.ObjectId,
-      ref: "User",
+    publicId: {
+      type: String,
       required: true,
     },
-
-    // 🔥 NEW
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-
-    // 🔥 VARIANTS (core change)
-    variants: {
-      type: [variantSchema],
-      validate: {
-        validator: function (value: Variant[]) {
-          return value.length > 0;
-        },
-        message: "Product must have at least one variant",
-      },
+    seller: {
+      type: mongoose.Types.ObjectId,
+      ref: "Seller",
+      required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Product = mongoose.model<Products>("Product", productSchema);

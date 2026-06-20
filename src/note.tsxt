@@ -62,4 +62,53 @@
 
 
 
+{
+    "imageUrls": [
+        "https://res.cloudinary.com/doc865ug6/image/upload/v1780659758/agaealysd5exponflrwt.png"
+    ],
+    "publicIds": [
+        "agaealysd5exponflrwt"
+    ]
+}
+
+
+
+
+
+
+
+
+{
+    "imageUrls": [
+        "https://res.cloudinary.com/doc865ug6/image/upload/v1780679415/ywgcmgytpavjj0kqezuy.png"
+    ],
+    "publicIds": [
+        "ywgcmgytpavjj0kqezuy"
+    ]
+}
+
+
+
+
+
+
+
+{
+    "imageUrls": [
+        "https://res.cloudinary.com/doc865ug6/image/upload/v1780679846/sehytycgfattilemkniu.png"
+    ],
+    "publicIds": [
+        "sehytycgfattilemkniu"
+    ]
+}
 Ashabul-khaf
+
+
+
+                    id: sellerObj._id.toString(),
+                    storeName: sellerObj.storeName,
+                    description: sellerObj.description,
+                    owner: sellerObj.owner,
+                    businessEmail: sellerObj.businessEmail,
+                    businessPhone: sellerObj.businessPhone,
+                    businessLogo: sellerObj.businessLogo,

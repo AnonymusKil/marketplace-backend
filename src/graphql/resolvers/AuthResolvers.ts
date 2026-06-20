@@ -28,7 +28,6 @@ const Resolvers = {
         role: userObj.role,
         sellerStatus: userObj.sellerStatus,
       }
-      return user;
     },
   },
   Mutation: {

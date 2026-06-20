@@ -46,13 +46,11 @@ export async function becomeASeller(
     throw new Error("You are already a seller");
   }
 
-  // 🧠 Check existing seller
   const existingSeller = await sellerModel.findOne({ owner });
   if (existingSeller) {
     throw new Error("Seller profile already exists");
   }
 
-  // 🏪 Create seller WITH logo info
   const newSeller = new sellerModel({
     storeName,
     description,
@@ -66,11 +64,9 @@ export async function becomeASeller(
 
   await newSeller.save();
 
-  // 🔄 Update user status 
   finduser.sellerStatus = "pending";
   await finduser.save();
 
-  // 📧 Email (unchanged — good job here)
    
   const {subject, html} = sellerApplicationNotificationTemplate(finduser.name);
   await sendEmail({to: "navadesignz11@gmail.com", subject, html});
