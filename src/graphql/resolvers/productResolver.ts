@@ -25,6 +25,7 @@ const productResolver = {
             category: productObj.category,
             images: productObj.images,
             publicId: productObj.publicId,
+            createdAt: productObj.createdAt,
             seller: {
               id: sellerObj._id.toString(),
               storeName: sellerObj.storeName,

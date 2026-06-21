@@ -36,6 +36,7 @@ export const authTypeDefs = gql`
     images: [String!]!
     category: String!
     publicId: String!
+    createdAt: String!
     seller: Seller!
   }
   type CartItem {
@@ -240,7 +241,7 @@ export const authTypeDefs = gql`
     me: User!
     sellerProfile: Seller!
     sellers(status: String): [Seller!]!
-    products(search:String): [Product!]!
+    products(search: String): [Product!]!
     getProductsByProductId(productId: ID!): Product!
     mysellerProducts: [Product!]!
     getCart: Cart!

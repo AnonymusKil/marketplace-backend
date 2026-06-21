@@ -8,6 +8,7 @@ interface Products extends Document {
   images: string[];
   publicId: string;
   seller: mongoose.Types.ObjectId;
+  createdAt: string;
 }
 
 const productSchema = new Schema<Products>(
