@@ -1,4 +1,4 @@
-import {GraphQLError} from "graphql";
+import { GraphQLError } from "graphql";
 import { register, login } from "../../services/authservices.js";
 import User from "../../model/Usermodel.js";
 
@@ -21,17 +21,48 @@ const Resolvers = {
         });
       }
       const userObj = user.toObject();
-      return{
+      return {
         id: userObj._id.toString(),
         name: userObj.name,
         email: userObj.email,
         role: userObj.role,
         sellerStatus: userObj.sellerStatus,
+      };
+    },
+    getAdminDashboardProfile: async (_: any, __: any, context: any) => {
+      if (!context.user) {
+        throw new GraphQLError("Unauthorized", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
       }
+
+      if (context.user.role !== "admin") {
+        throw new GraphQLError("Forbidden", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      }
+
+      const user = await User.findById(context.user.userId);
+
+      if (!user) {
+        throw new GraphQLError("User not found", {
+          extensions: { code: "NOT_FOUND" },
+        });
+      }
+
+      const userObj = user.toObject();
+
+      return {
+        id: userObj._id.toString(),
+        name: userObj.name,
+        email: userObj.email,
+        role: userObj.role,
+        sellerStatus: userObj.sellerStatus,
+      };
     },
   },
   Mutation: {
-    register: async (_: any, { input }: any, { res}: any) => {
+    register: async (_: any, { input }: any, { res }: any) => {
       try {
         const { name, email, password } = input;
         const response = await register({
@@ -50,7 +81,7 @@ const Resolvers = {
           message: "User registered successfully",
           user: response.user,
           token: response.token,
-        }
+        };
       } catch (error: any) {
         throw new GraphQLError(error.message || "Server error", {
           extensions: {
@@ -59,7 +90,7 @@ const Resolvers = {
         });
       }
     },
-    login: async (_: any, { input }: any, { res}: any) => {
+    login: async (_: any, { input }: any, { res }: any) => {
       try {
         const { email, password } = input;
         const response = await login({
@@ -77,7 +108,7 @@ const Resolvers = {
           message: "User logged in successfully",
           user: response.user,
           token: response.token,
-        }
+        };
       } catch (error: any) {
         throw new GraphQLError(error.message || "Server error", {
           extensions: {
