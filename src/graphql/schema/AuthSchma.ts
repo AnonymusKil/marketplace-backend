@@ -45,6 +45,7 @@ export const authTypeDefs = gql`
     priceAtAdd: Float!
   }
   type Coupon {
+    id: ID!
     couponCode: String!
     expiryDate: String!
     couponDescription: String!
