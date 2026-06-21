@@ -240,7 +240,7 @@ export const authTypeDefs = gql`
     me: User!
     sellerProfile: Seller!
     sellers(status: String): [Seller!]!
-    products: [Product!]!
+    products(search:String): [Product!]!
     getProductsByProductId(productId: ID!): Product!
     mysellerProducts: [Product!]!
     getCart: Cart!
