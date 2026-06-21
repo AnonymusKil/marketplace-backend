@@ -9,20 +9,10 @@ import Cart from "../../model/cartModel.js";
 import { verifyTransaction } from "../../services/verifyTransaction.js";
 const cartResolver = {
   Query: {
-    getCoupons: async (_: any, __: any, context: any) => {
+    getCoupons: async (_: any, __: any) => {
       try {
-        if (!context.user) {
-          throw new GraphQLError("Unauthorized", {
-            extensions: { code: "UNAUTHENTICATED" },
-          });
-        }
 
-        const userRole = context?.user?.role;
-        if (userRole !== "admin") {
-          throw new GraphQLError("Forbidden", {
-            extensions: { code: "FORBIDDEN" },
-          });
-        }
+       
         const coupons = await CouponModel.find();
 
         return coupons.map((coupon) => ({
