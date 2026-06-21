@@ -1,6 +1,7 @@
 import { GraphQLError } from "graphql";
 import Usermodel from "../../model/Usermodel.js";
 import sellerModel from "../../model/sellerModel.js";
+import Product from "../../model/productModel.js";
 import { approveSeller } from "../../services/approveSellerService.js";
 
 const approveSellerResolver = {
@@ -60,11 +61,7 @@ const approveSellerResolver = {
         },
       };
     },
-    sellers: async (
-      _: any,
-      { status }: { status: string },
-      context: any,
-    ) => {
+    sellers: async (_: any, { status }: { status: string }, context: any) => {
       if (!context.user) {
         throw new GraphQLError("Unauthorized", {
           extensions: { code: "UNAUTHENTICATED" },
@@ -77,11 +74,11 @@ const approveSellerResolver = {
           extensions: { code: "FORBIDDEN" },
         });
       }
-     console.log("STATUS RECEIVED:", status);
+      console.log("STATUS RECEIVED:", status);
       const sellers = await sellerModel
         .find()
         .populate("owner", "name email createdAt sellerStatus");
-   
+
       const filteredSellers = status
         ? sellers.filter((seller: any) => seller.owner?.sellerStatus === status)
         : sellers;
@@ -109,6 +106,55 @@ const approveSellerResolver = {
           },
         };
       });
+    },
+    getSellerDetailsWithProducts: async (_: any, { storeName }: any) => {
+      try {
+        const seller = await sellerModel.findOne({ storeName });
+
+        if (!seller) {
+          throw new Error("Seller not found");
+        }
+
+        const products = await Product.find({
+          seller: seller._id,
+        }).populate("seller");
+
+        const sellerObj = seller.toObject();
+
+        return {
+          seller: {
+            id: sellerObj._id.toString(),
+            storeName: sellerObj.storeName,
+            description: sellerObj.description,
+            businessEmail: sellerObj.businessEmail,
+            businessPhone: sellerObj.businessPhone,
+            businessLogo: sellerObj.businessLogo,
+            businessAddress: sellerObj.businessAddress,
+            publicId: sellerObj.publicId,
+          },
+
+          products: products.map((product) => {
+            const productObj = product.toObject();
+
+            return {
+              id: productObj._id.toString(),
+              name: productObj.name,
+              description: productObj.description,
+              price: productObj.price,
+              category: productObj.category,
+              images: productObj.images,
+              publicId: productObj.publicId,
+              createdAt: productObj.createdAt,
+            };
+          }),
+        };
+      } catch (error: any) {
+        throw new GraphQLError(error.message || "Server error", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
     },
   },
   Mutation: {

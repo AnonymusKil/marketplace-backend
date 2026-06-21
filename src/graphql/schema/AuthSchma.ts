@@ -236,6 +236,10 @@ export const authTypeDefs = gql`
     totalOrders: Int!
     totalStores: Int!
   }
+  type SellerWithProducts {
+    seller: Seller!
+    products: [Product!]!
+  }
 
   type Query {
     me: User!
@@ -243,6 +247,7 @@ export const authTypeDefs = gql`
     sellers(status: String): [Seller!]!
     products(search: String): [Product!]!
     getProductsByProductId(productId: ID!): Product!
+    getSellerDetailsWithProducts(storeName: String!): SellerWithProducts!
     mysellerProducts: [Product!]!
     getCart: Cart!
     getOrders: [Order!]!
