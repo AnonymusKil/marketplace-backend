@@ -9,10 +9,20 @@ import Cart from "../../model/cartModel.js";
 import { verifyTransaction } from "../../services/verifyTransaction.js";
 const cartResolver = {
   Query: {
-    getCoupons: async (_: any, __: any) => {
+    getCoupons: async (_: any, __: any, context: any) => {
       try {
+        if (!context.user) {
+          throw new GraphQLError("Unauthorized", {
+            extensions: { code: "UNAUTHENTICATED" },
+          });
+        }
 
-       
+        const userRole = context?.user?.role;
+        if (userRole !== "admin") {
+          throw new GraphQLError("Forbidden", {
+            extensions: { code: "FORBIDDEN" },
+          });
+        }
         const coupons = await CouponModel.find();
 
         return coupons.map((coupon) => ({
@@ -32,7 +42,33 @@ const cartResolver = {
         });
       }
     },
+    getBestCoupon: async () => {
+      const coupons = await CouponModel.find();
 
+      if (!coupons || coupons.length === 0) {
+        throw new Error("No coupons found");
+      }
+
+      const validCoupons = coupons.filter((coupon) => {
+        return coupon.isActive && new Date(coupon.expiryDate) > new Date();
+      });
+
+      if (validCoupons.length === 0) {
+        throw new Error("No valid coupons available");
+      }
+
+      const bestCoupon = validCoupons.reduce((best, current) => {
+        if (!best) return current;
+
+        return current.discountValue > best.discountValue ? current : best;
+      }, null as any);
+
+      return {
+        couponCode: bestCoupon.couponCode,
+        discountValue: bestCoupon.discountValue,
+        discountType: bestCoupon.discountType,
+      };
+    },
     getCart: async (_: any, __: any, context: any) => {
       try {
         const userId = context?.user?.userId;

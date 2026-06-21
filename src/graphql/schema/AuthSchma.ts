@@ -259,6 +259,7 @@ export const authTypeDefs = gql`
     sellerOrderStats: SellerOrderStats!
     adminAnalytics: AdminAnalytics!
     getAdminDashboardProfile: User!
+    getBestCoupon:Coupon!
   }
 
   type Mutation {
