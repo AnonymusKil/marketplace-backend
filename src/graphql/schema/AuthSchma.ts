@@ -91,6 +91,7 @@ export const authTypeDefs = gql`
     authorizationUrl: String!
   }
   type Review {
+    id: ID!
     product: Product!
     user: User!
     rating: Float!

@@ -26,8 +26,8 @@ const reviewResolver = {
           id: review._id.toString(),
           content: review.content || "",
           rating: review.rating || 0,
-          createdAt: review.createdAt,
-          updatedAt: review.updatedAt,
+          createdAt: review.createdAt.toISOString(),
+          updatedAt: review.updatedAt.toISOString(),
 
           user: review.user
             ? {
@@ -35,7 +35,7 @@ const reviewResolver = {
                 name: (review.user as any).name || "Unknown",
                 email: (review.user as any).email || "",
                 role: (review.user as any).role || "",
-                createdAt: (review.user as any).createdAt || "",
+                createdAt: (review.user as any).createdAt.toISOString() || "",
               }
             : {
                 id: "deleted",
