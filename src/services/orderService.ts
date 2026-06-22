@@ -172,10 +172,10 @@ export async function createUserOrder(
             product: productOBJ
               ? {
                   id: productOBJ._id?.toString(),
-                  name: productOBJ.name || "Product unavailable",
-                  images: productOBJ.images || [],
-                  price: productOBJ.price || 0,
-                  description: productOBJ.description || "Useless"
+                  name: productOBJ.name ?? "Product unavailable",
+                  images: productOBJ.images ?? [],
+                  price: productOBJ.price ?? 0,
+                  description: productOBJ.description ?? "Useless"
                 }
               : null,
 

@@ -97,7 +97,7 @@ const cartResolver = {
               description: item.product.description,
               images: item.product.images,
               price: item.product.price,
-              category: item.product.category
+              category: item.product.category,
             },
             quantity: item.quantity,
             priceAtAdd: item.priceAtAdd,
@@ -130,7 +130,7 @@ const cartResolver = {
           throw new Error("No orders found");
         }
         return orders.map((order) => ({
-          id:order._id?.toString(),
+          id: order._id?.toString(),
           user: order.user.toString(),
           items: order.items.map((item: any) => ({
             product: {
@@ -161,7 +161,7 @@ const cartResolver = {
           subtotal: order.subtotal,
           status: order.status,
 
-          createdAt: order.createdAt,
+          createdAt: order.createdAt?.toISOString(),
           updatedAt: order.updatedAt,
         }));
       } catch (error: any) {
