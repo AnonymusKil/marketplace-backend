@@ -130,6 +130,7 @@ const cartResolver = {
           throw new Error("No orders found");
         }
         return orders.map((order) => ({
+          id:order._id?.toString(),
           user: order.user.toString(),
           items: order.items.map((item: any) => ({
             product: {

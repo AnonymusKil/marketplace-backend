@@ -73,6 +73,7 @@ export const authTypeDefs = gql`
     zipCode: String
   }
   type Order {
+    id: ID!
     items: [OrderItem!]!
     total: Float!
     subtotal: Float!
@@ -259,7 +260,7 @@ export const authTypeDefs = gql`
     sellerOrderStats: SellerOrderStats!
     adminAnalytics: AdminAnalytics!
     getAdminDashboardProfile: User!
-    getBestCoupon:Coupon!
+    getBestCoupon: Coupon!
   }
 
   type Mutation {
