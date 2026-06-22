@@ -97,6 +97,7 @@ const cartResolver = {
               description: item.product.description,
               images: item.product.images,
               price: item.product.price,
+              category: item.product.category
             },
             quantity: item.quantity,
             priceAtAdd: item.priceAtAdd,
