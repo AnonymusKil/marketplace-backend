@@ -163,7 +163,32 @@ export async function createUserOrder(
 
     return {
       message: "Order created successfully",
-      order: cleanOrder,
+      order: {
+        id: order._id.toString(),
+        items: order.items.map((item: any) => {
+          const productOBJ = item.product;
+
+          return {
+            product: productOBJ
+              ? {
+                  id: productOBJ._id?.toString(),
+                  name: productOBJ.name || "Product unavailable",
+                  images: productOBJ.images || [],
+                  price: productOBJ.price || 0,
+                  description: productOBJ.description || "Useless"
+                }
+              : null,
+
+            quantity: item.quantity,
+            price: item.priceAtAdd,
+          };
+        }),
+        total: order.total,
+        subtotal: order.subtotal,
+        status: order.status,
+        shippingAddress: order.shippingAddress,
+        createdAt: order.createdAt,
+      },
     };
   } catch (error: any) {
     throw new Error(error.message);
