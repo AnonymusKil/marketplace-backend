@@ -96,8 +96,8 @@ const reviewResolver = {
         id: review._id.toString(),
         content: review.content,
         rating: review.rating,
-        createdAt: review.createdAt,
-        updatedAt: review.updatedAt,
+        createdAt: review.createdAt.toISOString(),
+        updatedAt: review.updatedAt.toISOString(),
 
         user: review.user
           ? {
