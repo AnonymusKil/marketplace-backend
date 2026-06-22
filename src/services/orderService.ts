@@ -47,7 +47,7 @@ export async function createUserOrder(
       !shippingAddress?.state ||
       !shippingAddress?.country ||
       !shippingAddress?.street ||
-      !shippingAddress?.emailAddress 
+      !shippingAddress?.emailAddress
     ) {
       throw new Error("All shipping address fields are required");
     }
@@ -143,10 +143,25 @@ export async function createUserOrder(
         transactionRef: `TXN_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       },
     });
+    const orderObj = order.toObject();
+
+    const cleanOrder = {
+      ...orderObj,
+      id: orderObj._id.toString(),
+      items: orderObj.items.map((item) => ({
+        ...item,
+        product: item.product
+          ? {
+              ...item.product,
+              id: item.product._id.toString(),
+            }
+          : null,
+      })),
+    };
 
     return {
       message: "Order created successfully",
-      order,
+      order: cleanOrder
     };
   } catch (error: any) {
     throw new Error(error.message);
