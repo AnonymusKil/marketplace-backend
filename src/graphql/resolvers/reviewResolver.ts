@@ -111,6 +111,7 @@ const reviewResolver = {
               id: (review.product as any)._id.toString(),
               name: (review.product as any).name,
               description: (review.product as any).description,
+              category: (review.product as any).category
             }
           : null,
       }));
