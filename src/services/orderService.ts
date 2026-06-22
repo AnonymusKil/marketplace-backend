@@ -145,7 +145,7 @@ export async function createUserOrder(
     });
     const orderObj = await order.populate({
       path: "items.product",
-      select: "name images price description",
+      select: "name images price description category",
     });
     const cleanOrder = {
       ...orderObj,
