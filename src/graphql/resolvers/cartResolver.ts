@@ -258,7 +258,6 @@ const cartResolver = {
     createOrder: async (_: any, { input }: any, context: any) => {
       try {
         const { couponCode, paymentMethod, shippingAddress } = input;
-
         const response = await createUserOrder(
           {
             couponCode,

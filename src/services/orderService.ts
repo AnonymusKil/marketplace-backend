@@ -143,8 +143,10 @@ export async function createUserOrder(
         transactionRef: `TXN_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       },
     });
-    const orderObj = order.toObject();
-
+    const orderObj = await order.populate({
+      path: "items.product",
+      select: "name images price description",
+    });
     const cleanOrder = {
       ...orderObj,
       id: orderObj._id.toString(),
@@ -161,7 +163,7 @@ export async function createUserOrder(
 
     return {
       message: "Order created successfully",
-      order: cleanOrder
+      order: cleanOrder,
     };
   } catch (error: any) {
     throw new Error(error.message);
