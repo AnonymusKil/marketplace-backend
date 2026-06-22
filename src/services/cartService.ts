@@ -76,7 +76,7 @@ export async function addToCart(data: AddToCartInput, context: any) {
 
   return {
     message: "Added to cart successfully",
-    cart: cleanCart
+    cart: cleanCart,
   };
 }
 
@@ -104,8 +104,23 @@ export async function handleDelete(data: DeleteCart, context: any) {
     return sum + item.quantity * item.priceAtAdd;
   }, 0);
   await cart.save();
+
+  const populatedCart = await cart.populate("items.product");
+
+  const cleanCart = {
+    ...populatedCart.toObject(),
+    items: populatedCart.items.map((item: any) => ({
+      ...item.toObject?.(),
+      product: item.product
+        ? {
+            ...item.product.toObject?.(),
+            id: item.product._id.toString(),
+          }
+        : null,
+    })),
+  };
   return {
     message: "Cart Updated successfully",
-    cart,
+    cart: cleanCart
   };
 }
