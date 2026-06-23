@@ -30,7 +30,7 @@ const cartResolver = {
           couponCode: coupon.couponCode,
           discountType: coupon.discountType,
           discountValue: coupon.discountValue,
-          expiryDate: coupon.expiryDate,
+          expiryDate: coupon.expiryDate.toISOString(),
           isActive: coupon.isActive,
           couponDescription: coupon.couponDescription,
         }));
