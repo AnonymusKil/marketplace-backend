@@ -31,7 +31,8 @@ interface Order extends Document {
 
   shippingAddress: ShippingAddress;
 
-  status: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
+  orderStatus: "processing" | "shipped" | "delivered" | "cancelled";
+  paymentStatus: "paid" | "pending" | "failed";
 
   payment: {
     method: "paystack" | "card" | "stripe";
@@ -41,7 +42,7 @@ interface Order extends Document {
   };
   createdAt?: Date;
   updatedAt?: Date;
-
+  couponCode: string | null;
 }
 
 const orderSchema = new Schema<Order>(
@@ -97,6 +98,10 @@ const orderSchema = new Schema<Order>(
       type: Number,
       required: true,
     },
+    couponCode: {
+      type: String,
+      default: null,
+    },
 
     shippingAddress: {
       fullName: {
@@ -142,9 +147,14 @@ const orderSchema = new Schema<Order>(
       },
     },
 
-    status: {
+    orderStatus: {
       type: String,
-      enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
+      enum: ["processing", "shipped", "delivered", "cancelled"],
+      default: "processing",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["paid", "pending", "failed"],
       default: "pending",
     },
 

@@ -26,7 +26,7 @@ export async function verifyTransaction({ reference }: VerifyPayment) {
       const order = await orderModel.findOneAndUpdate(
         { "payment.reference": reference },
         {
-          status: "paid",
+          paymentStatus: "paid",
           "payment.paidAt": new Date(),
         },
         { new: true },

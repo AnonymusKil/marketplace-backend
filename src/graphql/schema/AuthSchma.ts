@@ -61,6 +61,9 @@ export const authTypeDefs = gql`
     name: String!
     image: String!
   }
+    type Payment {
+    method: String!
+    }
   type ShippingAddress {
     fullName: String!
     phoneNumber: String!
@@ -78,9 +81,12 @@ export const authTypeDefs = gql`
     total: Float!
     subtotal: Float!
     discount: Coupon
-    status: String
+    orderStatus: String
     shippingAddress: ShippingAddress
     createdAt: String!
+    couponCode: String
+    user: User!
+    payment:Payment!
   }
 
   type CheckOut {
@@ -254,6 +260,8 @@ export const authTypeDefs = gql`
     mysellerProducts: [Product!]!
     getCart: Cart!
     getOrders: [Order!]!
+    getSellerOrders: [Order!]!
+    updateOrderStatus(orderId: ID!, status: String!): Order!
     getCoupons: [Coupon!]!
     getProductReviews(productId: ID!): [Review!]!
     getSellerReviews: [Review!]!

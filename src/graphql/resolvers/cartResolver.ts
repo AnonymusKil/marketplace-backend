@@ -7,7 +7,9 @@ import CouponModel from "../../model/couponModel.js";
 import orderModel from "../../model/orderModel.js";
 import Cart from "../../model/cartModel.js";
 import { verifyTransaction } from "../../services/verifyTransaction.js";
-const cartResolver = {
+import Seller from "../../model/sellerModel.js";
+import Product from "../../model/productModel.js";
+export const cartResolver = {
   Query: {
     getCoupons: async (_: any, __: any, context: any) => {
       try {
@@ -159,10 +161,10 @@ const cartResolver = {
 
           total: order.total,
           subtotal: order.subtotal,
-          status: order.status,
-
+          orderStatus: order.orderStatus,
           createdAt: order.createdAt?.toISOString(),
           updatedAt: order.updatedAt,
+          couponCode: order.couponCode,
         }));
       } catch (error: any) {
         throw new GraphQLError(error.message || "Server error", {
@@ -170,6 +172,82 @@ const cartResolver = {
             code: "INTERNAL_SERVER_ERROR",
           },
         });
+      }
+    },
+    getSellerOrders: async (_: any, __: any, context: any): Promise<any> => {
+      try {
+        if (!context.user) {
+          throw new GraphQLError("Unauthorized");
+        }
+
+        if (context.user.role !== "seller") {
+          throw new GraphQLError("Forbidden");
+        }
+
+        const seller = await Seller.findOne({ owner: context.user.userId });
+        if (!seller) throw new Error("No seller profile ");
+        const sellerProductIds = (
+          await Product.find({ seller: seller._id }).select("_id")
+        ).map((p) => p._id.toString());
+        const orders = await orderModel
+          .find({
+            "items.product": { $in: sellerProductIds },
+          })
+          .populate("items.product")
+          .populate("user");
+        if (orders.length === 0) throw new Error("No Orders yet");
+        const formattedOrders = orders.map((order) => ({
+          ...order.toObject(),
+          id: order?._id!.toString(),
+          createdAt: order?.createdAt!.toISOString() || null ,
+        }));
+
+        return formattedOrders;
+      } catch (error: any) {
+        throw new GraphQLError(error.message || "Server error");
+      }
+    },
+    updateOrderStatus: async (
+      _: any,
+      { orderId, status }: { orderId: string; status: any },
+      context: any,
+    ): Promise<any> => {
+      try {
+        if (!context.user) {
+          throw new GraphQLError("Unauthorized");
+        }
+
+        if (context.user.role !== "seller") {
+          throw new GraphQLError("Forbidden");
+        }
+
+        const seller = await Seller.findOne({ owner: context.user.userId });
+        if (!seller) throw new Error("No seller profile ");
+
+        const order = await orderModel.findById(orderId);
+
+        if (!order) {
+          throw new Error("Order not found");
+        }
+
+        // 🔐 VERY IMPORTANT: ensure seller owns at least one item in order
+        const sellerProductIds = (
+          await Product.find({ seller: seller._id }).select("_id")
+        ).map((p) => p._id.toString());
+
+        const canUpdate = order.items.some((item) =>
+          sellerProductIds.includes(item.product.toString()),
+        );
+
+        if (!canUpdate) {
+          throw new Error("You cannot modify this order");
+        }
+
+        order.orderStatus = status; // "PROCESSING" | "SHIPPED" | "DELIVERED"
+        await order.save();
+        return order.toObject();
+      } catch (error: any) {
+        throw new GraphQLError(error.message || "Server error");
       }
     },
   },
@@ -315,5 +393,3 @@ const cartResolver = {
     },
   },
 };
-
-export default cartResolver;

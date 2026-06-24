@@ -30,7 +30,7 @@ const sellerStats = {
         const productIds = product.map((productid) => productid._id);
         const orders = await orderModel.find({
           "items.product": { $in: productIds },
-          status: "paid",
+          paymentStatus: "paid",
         });
         let totalOrders = orders.length;
         let totalProducts = product.length;

@@ -131,12 +131,12 @@ export async function createUserOrder(
       subtotal,
 
       total: totalAmount,
-
+      couponCode: couponCode ?? null,
       discount: discountAmount,
 
       shippingAddress,
 
-      status: "pending",
+      paymentStatus: "pending",
 
       payment: {
         method: paymentMethod,
@@ -175,7 +175,7 @@ export async function createUserOrder(
                   name: productOBJ.name ?? "Product unavailable",
                   images: productOBJ.images ?? [],
                   price: productOBJ.price ?? 0,
-                  description: productOBJ.description ?? "Useless"
+                  description: productOBJ.description ?? "Useless",
                 }
               : null,
 
@@ -185,9 +185,10 @@ export async function createUserOrder(
         }),
         total: order.total,
         subtotal: order.subtotal,
-        status: order.status,
+        status: order.orderStatus,
         shippingAddress: order.shippingAddress,
         createdAt: order.createdAt,
+        couponCode: order.couponCode,
       },
     };
   } catch (error: any) {

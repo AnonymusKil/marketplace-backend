@@ -12,7 +12,7 @@ import approveSellerResolver from "./graphql/resolvers/approveSellerResolver.js"
 import refreshTokenResolver from "./graphql/resolvers/refreshTokenResolver.js";
 import productResolvers from "./graphql/resolvers/productResolver.js";
 import productReviews from "./graphql/resolvers/reviewResolver.js"
-import cartResolver from "./graphql/resolvers/cartResolver.js";
+import {cartResolver} from "./graphql/resolvers/cartResolver.js";
 import sellerStats from "./graphql/resolvers/sellerStatsResolver.js"
 import imageRoutes from "./routes/uploadImage.js";
 import connectDB from "./database/db.js";

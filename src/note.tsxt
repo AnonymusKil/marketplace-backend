@@ -56,45 +56,6 @@
 }
 //Product blueprint
 
-{
-  "name": "Nike Shirt",
-  "price": 5000,
-  "category": "Fashion",
-  "isActive": true,
-  "variants": [
-    { "size": "S", "quantity": 10 },
-    { "size": "M", "quantity": 5 },
-    { "size": "L", "quantity": 0 }
-  ]
-}
-
-
-
-{
-    "imageUrls": [
-        "https://res.cloudinary.com/doc865ug6/image/upload/v1780659758/agaealysd5exponflrwt.png"
-    ],
-    "publicIds": [
-        "agaealysd5exponflrwt"
-    ]
-}
-
-
-
-
-
-
-
-
-{
-    "imageUrls": [
-        "https://res.cloudinary.com/doc865ug6/image/upload/v1780679415/ywgcmgytpavjj0kqezuy.png"
-    ],
-    "publicIds": [
-        "ywgcmgytpavjj0kqezuy"
-    ]
-}
-
 
 
 
@@ -120,3 +81,12 @@ Ashabul-khaf
                     businessEmail: sellerObj.businessEmail,
                     businessPhone: sellerObj.businessPhone,
                     businessLogo: sellerObj.businessLogo,
+
+
+                    https://marketplace-backend-vv3p.onrender.com
+
+
+
+
+
+                    http://10.0.10.1/login?dst=http%3A%2F%2Fwww.msftconnecttest.com%2Fredirect

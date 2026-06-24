@@ -25,7 +25,7 @@ export async function initializeTransaction(
     throw new Error("Unauthorized order access");
   }
 
-  if (order.status === "paid") {
+  if (order.paymentStatus === "paid") {
     throw new Error("Order already paid");
   }
 

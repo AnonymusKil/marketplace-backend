@@ -35,11 +35,10 @@ export async function writeReview(
     const userId = context?.user?.userId;
     if (!userId) throw new Error("Not authenticated");
 
-    // check if user has purchased the item
     const hasPurchased = await orderModel.findOne({
       user: userId,
       "items.product": productId,
-      status: "paid",
+      orderStatus: "delivered",
     });
 
     if (!hasPurchased) {
