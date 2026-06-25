@@ -61,9 +61,9 @@ export const authTypeDefs = gql`
     name: String!
     image: String!
   }
-    type Payment {
+  type Payment {
     method: String!
-    }
+  }
   type ShippingAddress {
     fullName: String!
     phoneNumber: String!
@@ -86,7 +86,7 @@ export const authTypeDefs = gql`
     createdAt: String!
     couponCode: String
     user: User!
-    payment:Payment!
+    payment: Payment!
   }
 
   type CheckOut {
@@ -261,7 +261,6 @@ export const authTypeDefs = gql`
     getCart: Cart!
     getOrders: [Order!]!
     getSellerOrders: [Order!]!
-    updateOrderStatus(orderId: ID!, status: String!): Order!
     getCoupons: [Coupon!]!
     getProductReviews(productId: ID!): [Review!]!
     getSellerReviews: [Review!]!
@@ -285,6 +284,7 @@ export const authTypeDefs = gql`
     deleteCartItem(input: DeleteCartInput!): CartResponse!
     verifyPayment(input: verifyPayment!): verifyPaymentResponse!
     createReview(input: CreateReviewInput!): ReviewResponse!
+    updateOrderStatus(orderId: ID!, status: String!): Order!
     refreshToken: RefreshTokenResponse!
     logout: logOutResponse!
   }
