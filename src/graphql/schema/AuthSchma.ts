@@ -87,6 +87,7 @@ export const authTypeDefs = gql`
     couponCode: String
     user: User!
     payment: Payment!
+    paymentStatus: String
   }
 
   type CheckOut {
