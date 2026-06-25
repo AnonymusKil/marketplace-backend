@@ -77,7 +77,7 @@ const sellerStats = {
         }
         const totalProducts = await Product.countDocuments();
         const totalStores = await Seller.countDocuments();
-        const orders = await orderModel.find({status: "paid"})
+        const orders = await orderModel.find({paymentStatus: "paid"})
         let totalOrders = orders.length
         let totalRevenue = 0
         for (const order of orders){
