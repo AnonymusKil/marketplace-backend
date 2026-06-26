@@ -23,6 +23,7 @@ export async function verifyTransaction({ reference }: VerifyPayment) {
     const paymentData = response.data.data;
 
     if (paymentData.status === "success") {
+      
       const order = await orderModel.findOneAndUpdate(
         { "payment.reference": reference },
         {
@@ -31,6 +32,7 @@ export async function verifyTransaction({ reference }: VerifyPayment) {
         },
         { new: true },
       );
+      console.log(order)
 
       if (!order) {
         throw new Error("Order not found");
@@ -43,6 +45,7 @@ export async function verifyTransaction({ reference }: VerifyPayment) {
           totalPrice: 0,
         },
       );
+      
       return {
         message: "Payment verified successfully",
         status: paymentData.status,

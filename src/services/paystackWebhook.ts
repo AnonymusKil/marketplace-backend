@@ -36,7 +36,7 @@ router.post(
       if (event.event === "charge.success") {
         const reference = event.data.reference;
 
-        await verifyTransaction(reference);
+        // await verifyTransaction({reference});
         await updateOrderStatus(reference, "paid");
 
         console.log("✅ Order updated:", reference);
