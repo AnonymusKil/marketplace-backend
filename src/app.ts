@@ -11,6 +11,7 @@ import sellerResolvers from "./graphql/resolvers/sellerResolvers.js";
 import approveSellerResolver from "./graphql/resolvers/approveSellerResolver.js";
 import refreshTokenResolver from "./graphql/resolvers/refreshTokenResolver.js";
 import productResolvers from "./graphql/resolvers/productResolver.js";
+import paystackWebhook from "./services/paystackWebhook.js";
 import productReviews from "./graphql/resolvers/reviewResolver.js"
 import {cartResolver} from "./graphql/resolvers/cartResolver.js";
 import sellerStats from "./graphql/resolvers/sellerStatsResolver.js"
@@ -52,6 +53,8 @@ async function startServer() {
     });
 
     await server.start();
+    app.use("/api/paystack", paystackWebhook);
+
     
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -77,6 +80,7 @@ async function startServer() {
 
     // ✅ REST routes
     app.use("/image", imageRoutes);
+
 
     // ✅ GraphQL
     app.use(
