@@ -384,6 +384,29 @@ export const cartResolver = {
         if (!canUpdate) {
           throw new Error("You cannot modify this order");
         }
+        if (order.paymentStatus !== "paid") {
+          throw new Error("Order has not been paid for");
+        }
+        const allowedStatuses = [
+          "processing",
+          "shipped",
+          "delivered",
+          "cancelled",
+        ];
+
+        if (!allowedStatuses.includes(status)) {
+          throw new Error("Invalid order status");
+        }
+        const flow = {
+          processing: ["shipped"],
+          shipped: ["delivered"],
+          delivered: [] as string [],
+          cancelled: [] as string [],
+        };
+
+        if (!flow[order.orderStatus].includes(status)) {
+          throw new Error("Invalid status transition");
+        }
 
         order.orderStatus = status; // "PROCESSING" | "SHIPPED" | "DELIVERED"
         await order.save();
