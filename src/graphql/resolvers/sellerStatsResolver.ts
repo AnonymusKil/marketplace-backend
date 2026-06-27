@@ -119,6 +119,17 @@ const sellerStats = {
               },
             },
           },
+
+          {
+            $sort: {
+              totalSold: -1,
+            },
+          },
+
+          {
+            $limit: limit || 10,
+          },
+
           {
             $lookup: {
               from: "products",
@@ -130,21 +141,38 @@ const sellerStats = {
               as: "product",
             },
           },
+
           {
             $unwind: "$product",
           },
 
           {
-            $sort: {
-              totalSold: -1,
+            $project: {
+              _id: 0,
+
+              totalSold: 1,
+
+              product: {
+                id: "$product._id",
+
+                name: "$product.name",
+
+                description: "$product.description",
+
+                price: "$product.price",
+
+                images: "$product.images",
+
+                category: "$product.category",
+
+                publicId: "$product.publicId",
+
+                createdAt: "$product.createdAt",
+              },
             },
           },
-
-          {
-            $limit: limit || 10,
-          },
         ]);
-        return bestSelling;
+       return bestSelling
       } catch (error: any) {
         throw new GraphQLError(error.message || "Server error", {
           extensions: {
