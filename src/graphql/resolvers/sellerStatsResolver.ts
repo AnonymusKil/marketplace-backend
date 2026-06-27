@@ -77,19 +77,74 @@ const sellerStats = {
         }
         const totalProducts = await Product.countDocuments();
         const totalStores = await Seller.countDocuments();
-        const orders = await orderModel.find({paymentStatus: "paid"})
-        let totalOrders = orders.length
-        let totalRevenue = 0
-        for (const order of orders){
-          totalRevenue += order.total || 0
+        const orders = await orderModel.find({ paymentStatus: "paid" });
+        let totalOrders = orders.length;
+        let totalRevenue = 0;
+        for (const order of orders) {
+          totalRevenue += order.total || 0;
         }
         return {
           totalOrders,
           totalRevenue,
           totalStores,
-          totalProducts
-        }
+          totalProducts,
+        };
+      } catch (error: any) {
+        throw new GraphQLError(error.message || "Server error", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
+    },
+    getBestSellingProducts: async (_: any, { limit }: any) => {
+      try {
+        const bestSelling = await orderModel.aggregate([
+          {
+            $match: {
+              paymentStatus: "paid",
+            },
+          },
 
+          {
+            $unwind: "$items",
+          },
+
+          {
+            $group: {
+              _id: "$items.product",
+
+              totalSold: {
+                $sum: "$items.quantity",
+              },
+            },
+          },
+          {
+            $lookup: {
+              from: "products",
+
+              localField: "_id",
+
+              foreignField: "_id",
+
+              as: "product",
+            },
+          },
+          {
+            $unwind: "$product",
+          },
+
+          {
+            $sort: {
+              totalSold: -1,
+            },
+          },
+
+          {
+            $limit: limit || 10,
+          },
+        ]);
+        return bestSelling;
       } catch (error: any) {
         throw new GraphQLError(error.message || "Server error", {
           extensions: {

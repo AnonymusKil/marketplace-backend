@@ -47,6 +47,7 @@ export async function initializeTransaction(
       email,
       amount: order.total * 100,
       reference,
+      callback_url: "https://marketplace-frontend-one-sage.vercel.app",
     },
     {
       headers: {

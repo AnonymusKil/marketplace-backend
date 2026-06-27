@@ -250,6 +250,10 @@ export const authTypeDefs = gql`
     seller: Seller!
     products: [Product!]!
   }
+  type BestSeller {
+    product: Product!
+    totalSold: Int!
+  }
 
   type Query {
     me: User!
@@ -270,6 +274,7 @@ export const authTypeDefs = gql`
     adminAnalytics: AdminAnalytics!
     getAdminDashboardProfile: User!
     getBestCoupon: Coupon!
+    getBestSellingProducts(limit: Int): [BestSeller!]!
   }
 
   type Mutation {
