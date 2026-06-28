@@ -142,9 +142,6 @@ const productResolver = {
         });
       }
     },
-    generateProductDescription: (_:any, { name }: {name:any}) => {
-      return generateProductDescriptionWithAi(name);
-    },
   },
   Mutation: {
     createProduct: async (_: any, { input }: any, context: any) => {
@@ -172,6 +169,9 @@ const productResolver = {
           },
         });
       }
+    },
+    generateProductDescription: (_:any, { name }: {name:any}) => {
+      return generateProductDescriptionWithAi(name);
     },
   },
 };

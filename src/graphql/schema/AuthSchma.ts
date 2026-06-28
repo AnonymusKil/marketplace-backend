@@ -280,7 +280,6 @@ export const authTypeDefs = gql`
     getAdminDashboardProfile: User!
     getBestCoupon: Coupon!
     getBestSellingProducts(limit: Int): [BestSeller!]!
-    generateProductDescription(name:String!):DescriptionResponse!
   }
 
   type Mutation {
@@ -297,6 +296,7 @@ export const authTypeDefs = gql`
     verifyPayment(input: verifyPayment!): verifyPaymentResponse!
     createReview(input: CreateReviewInput!): ReviewResponse!
     updateOrderStatus(orderId: ID!, status: String!): Order!
+    generateProductDescription(name: String!): DescriptionResponse!
     refreshToken: RefreshTokenResponse!
     logout: logOutResponse!
   }
