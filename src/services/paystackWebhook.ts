@@ -38,6 +38,8 @@ router.post(
 
         // await verifyTransaction({reference});
         await updateOrderStatus(reference, "paid");
+        await verifyTransaction({reference})
+        
 
         console.log("✅ Order updated:", reference);
       }
