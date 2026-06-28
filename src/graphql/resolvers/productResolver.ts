@@ -1,8 +1,8 @@
 import { GraphQLError } from "graphql";
 import { createProduct } from "../../services/productService.js";
-
 import sellerModel from "../../model/sellerModel.js";
 import productModel from "../../model/productModel.js";
+import { generateProductDescriptionWithAi } from "../../services/geminiService.js";
 const productResolver = {
   Query: {
     products: async (_: any, { search }: any) => {
@@ -141,6 +141,9 @@ const productResolver = {
           },
         });
       }
+    },
+    generateProductDescription: (_:any, { name }: {name:any}) => {
+      return generateProductDescriptionWithAi(name);
     },
   },
   Mutation: {

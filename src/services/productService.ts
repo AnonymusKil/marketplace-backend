@@ -1,10 +1,9 @@
 import productModel from "../model/productModel.js";
 import Usermodel from "../model/Usermodel.js";
 import sellermodel from "../model/sellerModel.js";
-import { generateProductDescriptionWithAi } from "./geminiService.js";
 interface CreateProductInput {
-  name: string;
   description: string;
+  name: string;
   price: number;
   category:
     | "Electronics"
@@ -57,18 +56,11 @@ export async function createProduct(
     if (existingProduct) {
       throw new Error("You already have a product with this name");
     }
-    let aiDescription = "";
-
-    try {
-      aiDescription = await generateProductDescriptionWithAi(name);
-    } catch (err) {
-      console.log("Gemini generation failed:", err);
-    }
 
     // Create the product
     const product = await productModel.create({
       name: name.trim(),
-      description: aiDescription || description,
+      description,
       price,
       category,
       images,

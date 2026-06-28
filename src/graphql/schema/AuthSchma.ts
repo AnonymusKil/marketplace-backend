@@ -254,6 +254,11 @@ export const authTypeDefs = gql`
     product: Product!
     totalSold: Int!
   }
+  type DescriptionResponse {
+    success: Boolean!
+    description: String
+    message: String
+  }
 
   type Query {
     me: User!
@@ -275,6 +280,7 @@ export const authTypeDefs = gql`
     getAdminDashboardProfile: User!
     getBestCoupon: Coupon!
     getBestSellingProducts(limit: Int): [BestSeller!]!
+    generateProductDescription(name:String!):DescriptionResponse!
   }
 
   type Mutation {
