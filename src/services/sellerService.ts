@@ -1,8 +1,7 @@
+import { getIO } from "../config/Socket.js";
 import sellerModel from "../model/sellerModel.js";
 import Usermodel from "../model/Usermodel.js";
-import { sendEmail } from "./sellerEmailServices.js";
-import {sellerApplicationNotificationTemplate} from "../email/selllerApplicationNotification.js";
-
+import notificationModel from "../model/notificationModel.js";
 interface SellerInput {
   storeName: string;
   description: string;
@@ -23,14 +22,28 @@ export async function becomeASeller(
   data: SellerInput,
   context: any,
 ): Promise<SellerResponse> {
-  const { storeName, description, businessEmail, businessPhone, businessLogo, businessAddress, publicId } = data;
+  const {
+    storeName,
+    description,
+    businessEmail,
+    businessPhone,
+    businessLogo,
+    businessAddress,
+    publicId,
+  } = data;
 
   // 🔐 Auth
   const owner = context?.user?.userId;
   if (!owner) throw new Error("Not authenticated");
 
   // 🧾 Validate input
-  if (!storeName || !description || !businessEmail || !businessPhone || !businessAddress) {
+  if (
+    !storeName ||
+    !description ||
+    !businessEmail ||
+    !businessPhone ||
+    !businessAddress
+  ) {
     throw new Error("All fields are required");
   }
 
@@ -67,11 +80,19 @@ export async function becomeASeller(
   finduser.sellerStatus = "pending";
   await finduser.save();
 
-   
-  const {subject, html} = sellerApplicationNotificationTemplate(finduser.name);
-  await sendEmail({to: "navadesignz11@gmail.com", subject, html});
- 
+  const notification = {
+    user: owner,
+    title: "Seller Application Submitted",
+    message:
+      "Your seller application has been received successfully and is currently under review. You will be notified once a decision has been made.",
+    read: false,
+  };
 
+  await notificationModel.create(notification);
+
+  const io = getIO();
+
+  io.to(owner).emit("notification", notification);
   return {
     message: "Application submitted successfully",
     sellerStatus: finduser.sellerStatus,

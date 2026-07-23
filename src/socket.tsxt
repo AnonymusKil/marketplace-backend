@@ -1,0 +1,17 @@
+const io = new Server(httpServer,{
+   cors:{
+      origin:"http://localhost:3000"
+   }
+});
+
+setIO(io);
+
+io.on("connection",(socket)=>{
+
+   const userId = socket.handshake.auth.userId;
+
+   if(userId){
+      socket.join(userId);
+   }
+
+});

@@ -1,10 +1,13 @@
 import "dotenv/config";
 import express from "express";
+import http from "http";
+import { Server } from "socket.io";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import jsonwebtoken from "jsonwebtoken";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
+import {setIO} from "./config/Socket.js";
 import { authTypeDefs } from "./graphql/schema/AuthSchma.js";
 import authResolvers from "./graphql/resolvers/AuthResolvers.js";
 import sellerResolvers from "./graphql/resolvers/sellerResolvers.js";
@@ -20,6 +23,7 @@ import connectDB from "./database/db.js";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
+const httpserver = http.createServer(app);
 
 async function startServer() {
   try {
@@ -63,6 +67,20 @@ async function startServer() {
       "https://marketplace-frontend-one-sage.vercel.app",
       "http://localhost:3000",
     ];
+    const io = new Server(httpserver, {
+      cors: {
+        origin: allowedOrigins,
+      },
+    });
+    setIO(io);
+    io.on("connection", (socket) => {
+      console.log("A user connected:", socket.id);
+      const userId = socket.handshake.auth.userId;
+      if (userId) {
+        socket.join(userId as string);
+        console.log(`User ${userId} joined room ${userId}`);
+      }
+    });
     app.use(
       cors({
         origin: function (origin, callback) {
@@ -106,7 +124,7 @@ async function startServer() {
       }),
     );
 
-    app.listen(PORT, () => {
+    httpserver.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}/graphql`);
     });
   } catch (error) {
