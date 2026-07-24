@@ -13,6 +13,7 @@ import authResolvers from "./graphql/resolvers/AuthResolvers.js";
 import sellerResolvers from "./graphql/resolvers/sellerResolvers.js";
 import approveSellerResolver from "./graphql/resolvers/approveSellerResolver.js";
 import refreshTokenResolver from "./graphql/resolvers/refreshTokenResolver.js";
+import notificationResolver from "./graphql/resolvers/notificationResolver.js"
 import productResolvers from "./graphql/resolvers/productResolver.js";
 import paystackWebhook from "./services/paystackWebhook.js";
 import productReviews from "./graphql/resolvers/reviewResolver.js"
@@ -35,7 +36,8 @@ async function startServer() {
         ...productResolvers.Query,
         ...cartResolver.Query,
         ...productReviews.Query,
-        ...sellerStats.Query
+        ...sellerStats.Query,
+        ...notificationResolver.Query,
         // ...refreshTokenResolver.Query,
         // Example query resolver
       },
@@ -47,6 +49,7 @@ async function startServer() {
         ...productResolvers.Mutation,
         ...cartResolver.Mutation,
         ...productReviews.Mutation,
+        ...notificationResolver.Mutation,
         // Example mutation resolver
       },
     };

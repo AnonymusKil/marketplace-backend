@@ -137,6 +137,15 @@ export const authTypeDefs = gql`
     authorization_url: String!
     reference: String!
   }
+  type Notification {
+    id: ID!
+    user: User!
+    title: String!
+    message: String!
+    read: Boolean!
+    createdAt: String!
+    updatedAt: String!
+  }
   input createCouponInput {
     couponCode: String!
     expiryDate: String!
@@ -280,6 +289,8 @@ export const authTypeDefs = gql`
     getAdminDashboardProfile: User!
     getBestCoupon: Coupon!
     getBestSellingProducts(limit: Int): [BestSeller!]!
+    getNotifications: [Notification!]!
+    unReadNotificationsCount: Int!
   }
 
   type Mutation {
@@ -299,5 +310,7 @@ export const authTypeDefs = gql`
     generateProductDescription(name: String!): DescriptionResponse!
     refreshToken: RefreshTokenResponse!
     logout: logOutResponse!
+    markAllNotificationsAsRead: String!
+    markNotificationAsRead(notificationId: ID!): String!
   }
 `;

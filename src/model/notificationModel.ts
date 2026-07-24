@@ -5,6 +5,8 @@ interface Notification extends Document {
   title: string;
   message: string;
   read: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 const notificationSchema = new Schema<Notification>(
   {
