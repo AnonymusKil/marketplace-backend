@@ -1,7 +1,8 @@
 import axios from "axios";
+import { getIO } from "../config/Socket.js";
 import orderModel from "../model/orderModel.js";
 import User from "../model/Usermodel.js";
-
+import notificationModel from "../model/notificationModel.js";
 interface CheckOutInput {
   orderID: string;
 }
@@ -56,6 +57,17 @@ export async function initializeTransaction(
       },
     },
   );
+  const notification = {
+    user: userID,
+    title: "Payment Initiated",
+    message:
+      "Your payment session has been created successfully. Complete your payment to confirm your order.",
+    read: false,
+  };
+
+  await notificationModel.create(notification);
+  const io = getIO();
+  io.to(userID).emit("notification", notification);
 
   return {
     authorization_url: response.data.data.authorization_url,

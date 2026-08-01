@@ -1,4 +1,7 @@
 import CouponModel from "../model/couponModel.js";
+import { getIO } from "../config/Socket.js";
+import notificationModel from "../model/notificationModel.js";
+import Usermodel from "../model/Usermodel.js";
 interface CreateCouponInput {
   couponCode: string;
   expiryDate: Date;
@@ -15,12 +18,12 @@ interface CreateCouponResponse {
 }
 
 export async function createCoupon(
-  data: CreateCouponInput, context: any
+  data: CreateCouponInput,
+  context: any,
 ): Promise<CreateCouponResponse> {
-   
   const adminId = context?.user?.userId;
   const userRole = context?.user?.role;
-   if (!adminId || userRole !== "admin") {
+  if (!adminId || userRole !== "admin") {
     throw new Error("Not authorized");
   }
   const {
@@ -82,6 +85,25 @@ export async function createCoupon(
     discountValue,
     isActive,
     maxUses,
+  });
+  const users = await Usermodel.find({
+    role: { $in: ["user", "seller"] },
+  }).select("_id");
+
+  const notifications = users.map((user) => ({
+    user: user._id,
+    title: "🎉 New Coupon Available",
+    message: `A new coupon "${couponCode}" is now available. Claim it before it expires!`,
+    read: false,
+  }));
+
+  await notificationModel.insertMany(notifications);
+
+  const io = getIO();
+
+  io.emit("notification", {
+    title: "🎉 New Coupon Available",
+    message: `A new coupon "${couponCode}" is now available. Claim it before it expires!`,
   });
 
   return {

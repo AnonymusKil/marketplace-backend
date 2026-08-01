@@ -3,12 +3,14 @@ import { addToCart, handleDelete } from "../../services/cartService.js";
 import { createUserOrder } from "../../services/orderService.js";
 import { createCoupon } from "../../services/createCouponCode.js";
 import { initializeTransaction } from "../../services/iniatializeTransactionPaystack.js";
+import { getIO } from "../../config/Socket.js";
 import CouponModel from "../../model/couponModel.js";
 import orderModel from "../../model/orderModel.js";
 import Cart from "../../model/cartModel.js";
 import { verifyTransaction } from "../../services/verifyTransaction.js";
 import Seller from "../../model/sellerModel.js";
 import Product from "../../model/productModel.js";
+import notificationModel from "../../model/notificationModel.js";
 export const cartResolver = {
   Query: {
     getCoupons: async (_: any, __: any, context: any) => {
@@ -358,6 +360,7 @@ export const cartResolver = {
         if (!context.user) {
           throw new GraphQLError("Unauthorized");
         }
+        const userId = context?.user?.userId;
 
         if (context.user.role !== "seller") {
           throw new GraphQLError("Forbidden");
@@ -400,8 +403,8 @@ export const cartResolver = {
         const flow = {
           processing: ["shipped"],
           shipped: ["delivered"],
-          delivered: [] as string [],
-          cancelled: [] as string [],
+          delivered: [] as string[],
+          cancelled: [] as string[],
         };
 
         if (!flow[order.orderStatus].includes(status)) {
@@ -410,7 +413,21 @@ export const cartResolver = {
 
         order.orderStatus = status; // "PROCESSING" | "SHIPPED" | "DELIVERED"
         await order.save();
-        return { ...order.toObject(), id: order?._id!.toString() };
+
+        const io = getIO();
+
+        const notification = {
+          user: order.user,
+          title: "Order Status Updated",
+          message: `Your order status has been updated to "${status}". You can view the latest details and track your order from the Orders section of your account.`,
+          read: false,
+        };
+
+        const savedNotification = await notificationModel.create(notification);
+
+        io.to(order.user.toString()).emit("notification", savedNotification);
+
+        return { ...order.toObject(), id: order._id!.toString() };
       } catch (error: any) {
         throw new GraphQLError(error.message || "Server error");
       }

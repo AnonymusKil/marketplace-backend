@@ -1,8 +1,8 @@
 import Usermodel from "../model/Usermodel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {welcomeEmailTemplate} from "../email/welcomeEmail.js"
-import {sendEmail} from "./sellerEmailServices.js"
+import { getIO } from "../config/Socket.js";
+import notificationModel from "../model/notificationModel.js";
 const jwtseceret = process.env.JWT_SECRET_KEY;
 if (!jwtseceret) {
   throw new Error("JWT secret key not configured");
@@ -76,10 +76,19 @@ export async function register(data: User): Promise<AuthResponse> {
       token,
       refreshToken,
     };
-    const{subject, html} = welcomeEmailTemplate(
-      newUser.name,
-    );
-    await sendEmail({to: "navadesignz11@gmail.com", subject, html});
+    const notification = {
+      user: newUser._id,
+      title: "Welcome to GoCart!",
+      message:
+        "Your account has been created successfully. Start exploring products, save your favourites, and enjoy a seamless shopping experience.",
+      read: false,
+    };
+
+    const savedNotification = await notificationModel.create(notification);
+
+    const io = getIO();
+
+    io.to(newUser._id.toString()).emit("notification", savedNotification);
 
     return response;
   } catch (error: any) {
@@ -118,12 +127,10 @@ export async function login(data: LoginData): Promise<AuthResponse> {
     );
 
     const refreshToken = jwt.sign(
-      {userId: user._id,
-        role: user.role,
-      },
+      { userId: user._id, role: user.role },
       process.env.JWT_SECRET_KEY as string,
       { expiresIn: "7d" },
-    )
+    );
 
     const response: AuthResponse = {
       message: "User logged in successfully",
@@ -141,6 +148,6 @@ export async function login(data: LoginData): Promise<AuthResponse> {
     return response;
   } catch (error: any) {
     console.log("Login error:", error);
-    throw new Error( error.message || "Login Failed");
+    throw new Error(error.message || "Login Failed");
   }
 }

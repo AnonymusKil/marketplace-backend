@@ -1,6 +1,8 @@
+import { getIO } from "../config/Socket.js";
 import productModel from "../model/productModel.js";
 import Usermodel from "../model/Usermodel.js";
 import sellermodel from "../model/sellerModel.js";
+import notificationModel from "../model/notificationModel.js";
 interface CreateProductInput {
   description: string;
   name: string;
@@ -66,6 +68,23 @@ export async function createProduct(
       images,
       seller: seller._id,
       publicId,
+    });
+    const userquery = await Usermodel.find({
+      role: { $in: ["user", "seller"] },
+    }).select("_id");
+
+    const notifications = userquery.map((user) => ({
+      user: user._id,
+      title: "🛍️ New Product Available",
+      message: `"${product.name}" has just been added to GoCart. Check it out now!`,
+      read: false,
+    }));
+
+    const io = getIO();
+    await notificationModel.insertMany(notifications);
+    io.emit("notification", {
+      title: "🛍️ New Product Available",
+      message: `"${product.name}" has just been added to GoCart. Check it out now!`,
     });
 
     return {

@@ -2,6 +2,8 @@ import orderModel from "../model/orderModel.js";
 import CouponModel from "../model/couponModel.js";
 import Cart from "../model/cartModel.js";
 import Seller from "../model/sellerModel.js";
+import notificationModel from "../model/notificationModel.js";
+import { getIO } from "../config/Socket.js";
 
 interface CreateOrderInput {
   couponCode?: string;
@@ -147,20 +149,18 @@ export async function createUserOrder(
       path: "items.product",
       select: "name images price description category",
     });
-    const cleanOrder = {
-      ...orderObj,
-      id: orderObj._id.toString(),
-      items: orderObj.items.map((item) => ({
-        ...item,
-        product: item.product
-          ? {
-              ...item.product,
-              id: item.product._id.toString(),
-            }
-          : null,
-      })),
+
+    const notification = {
+      user: userId,
+      title: "Order Confirmed",
+      message:
+        "Thank you for shopping with GoCart. Your order has been received successfully and is now being processed. You can track its status anytime from your Orders page.",
+      read: false,
     };
 
+    const savedNotification = await notificationModel.create(notification);
+    const io = getIO();
+    io.to(userId.toString()).emit("notification", savedNotification);
     return {
       message: "Order created successfully",
       order: {

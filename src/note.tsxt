@@ -92,3 +92,24 @@ Ashabul-khaf
                     http://10.0.10.1/login?dst=http%3A%2F%2Fwww.msftconnecttest.com%2Fredirect
 
                           // callback_url: "https://marketplace-frontend-one-sage.vercel.app",
+
+
+
+i prefer teneray cause i don't understand && i know it means both condition must be true 
+
+
+
+
+const cleanOrder = {
+      ...orderObj,
+      id: orderObj._id.toString(),
+      items: orderObj.items.map((item) => ({
+        ...item,
+        product: item.product
+          ? {
+              ...item.product,
+              id: item.product._id.toString(),
+            }
+          : null,
+      })),
+    };
